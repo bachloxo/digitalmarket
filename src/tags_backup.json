@@ -1,0 +1,63 @@
+[
+{
+    "model": "tags.tag",
+    "pk": 1,
+    "fields": {
+        "title": "hulk",
+        "slug": "hulk",
+        "active": true,
+        "products": [
+            17
+        ]
+    }
+},
+{
+    "model": "tags.tag",
+    "pk": 2,
+    "fields": {
+        "title": "beach",
+        "slug": "beach",
+        "active": true,
+        "products": [
+            17
+        ]
+    }
+},
+{
+    "model": "tags.tag",
+    "pk": 3,
+    "fields": {
+        "title": "xxx",
+        "slug": "xxx",
+        "active": true,
+        "products": [
+            17
+        ]
+    }
+},
+{
+    "model": "tags.tag",
+    "pk": 4,
+    "fields": {
+        "title": "dmcs",
+        "slug": "dmcs",
+        "active": true,
+        "products": [
+            17,
+            18
+        ]
+    }
+},
+{
+    "model": "tags.tag",
+    "pk": 5,
+    "fields": {
+        "title": "tshirt",
+        "slug": "tshirt",
+        "active": true,
+        "products": [
+            18
+        ]
+    }
+}
+]

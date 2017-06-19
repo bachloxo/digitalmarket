@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>{{ title  }}</h1>
+
+{% if apply_form %}
+  <form method="POST" action=''> {% csrf_token %}
+    <h2>Rules of the Marketplace</h2>
+    <ol>
+      <ul>
+        <li>Be kind</li>
+        <li>Sell well</li>
+        <li>Don't steal</li>
+      </ul>
+    </ol>
+    {{ form.as_p }}
+    <br/>
+    <input type="submit" />
+  </form>
+{% endif %}
+
+{% if products %}
+  <div class="pull-right col-sidebar">
+    {% include "products/product_list_spinnet.html" with product_list=products %}
+  </div>
+{% endif %}
+
+{% if transactions %}
+  <div class="pull-left col-primary">
+    {% include "sellers/transaction_list.html" with transaction_list=transactions %}
+  </div>
+{% endif %}
+
+
+{% endblock %}

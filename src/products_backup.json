@@ -1,0 +1,188 @@
+[
+{
+    "model": "products.product",
+    "pk": 8,
+    "fields": {
+        "seller": 1,
+        "media": "",
+        "title": "image 1",
+        "slug": "image-1",
+        "description": "images 1",
+        "price": "9.99",
+        "sale_active": false,
+        "sale_price": "6.99"
+    }
+},
+{
+    "model": "products.product",
+    "pk": 12,
+    "fields": {
+        "seller": 1,
+        "media": "images-4/41f09786a64a4b14125b.jpg",
+        "title": "Images 4",
+        "slug": "images-4",
+        "description": "new",
+        "price": "9.99",
+        "sale_active": false,
+        "sale_price": "6.99"
+    }
+},
+{
+    "model": "products.product",
+    "pk": 17,
+    "fields": {
+        "seller": 1,
+        "media": "dmdmdmdmdm/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_fhSrsiq.png",
+        "title": "Product 1",
+        "slug": "product-1",
+        "description": "xxxx",
+        "price": "9.99",
+        "sale_active": false,
+        "sale_price": "6.99"
+    }
+},
+{
+    "model": "products.product",
+    "pk": 18,
+    "fields": {
+        "seller": 1,
+        "media": "psd-number-1/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024.png",
+        "title": "PSD number 1",
+        "slug": "psd-number-1",
+        "description": "Tshirt best by tygay",
+        "price": "9.99",
+        "sale_active": false,
+        "sale_price": "6.99"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 2,
+    "fields": {
+        "product": 8,
+        "user": 1,
+        "type": "hd",
+        "height": "2732",
+        "width": "2476",
+        "media": "image-1/17566300_xl.jpg"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 6,
+    "fields": {
+        "product": 17,
+        "user": null,
+        "type": "hd",
+        "height": "500",
+        "width": "500",
+        "media": "dmdmdmdmdm/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_fhSrsiq.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 7,
+    "fields": {
+        "product": 17,
+        "user": null,
+        "type": "sd",
+        "height": "350",
+        "width": "350",
+        "media": "dmdmdmdmdm/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_fhSrsiq_J30XDeH.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 8,
+    "fields": {
+        "product": 17,
+        "user": null,
+        "type": "micro",
+        "height": "50",
+        "width": "50",
+        "media": "dmdmdmdmdm/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_fhSrsiq_gU6DCcw.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 9,
+    "fields": {
+        "product": 18,
+        "user": null,
+        "type": "hd",
+        "height": "500",
+        "width": "500",
+        "media": "psd-number-1/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 10,
+    "fields": {
+        "product": 18,
+        "user": null,
+        "type": "sd",
+        "height": "350",
+        "width": "350",
+        "media": "psd-number-1/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_HJZQ13G.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 11,
+    "fields": {
+        "product": 18,
+        "user": null,
+        "type": "micro",
+        "height": "50",
+        "width": "50",
+        "media": "psd-number-1/sample_product2_ab3397ae-65b6-439d-8f44-6c94b18d1b75_1024x1024_t8nNBK2.png"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 12,
+    "fields": {
+        "product": 12,
+        "user": null,
+        "type": "hd",
+        "height": "500",
+        "width": "375",
+        "media": "images-4/41f09786a64a4b14125b.jpg"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 13,
+    "fields": {
+        "product": 12,
+        "user": null,
+        "type": "sd",
+        "height": "350",
+        "width": "262",
+        "media": "images-4/41f09786a64a4b14125b_UPSOcof.jpg"
+    }
+},
+{
+    "model": "products.thumbnail",
+    "pk": 14,
+    "fields": {
+        "product": 12,
+        "user": null,
+        "type": "micro",
+        "height": "50",
+        "width": "37",
+        "media": "images-4/41f09786a64a4b14125b_YFwI6RD.jpg"
+    }
+},
+{
+    "model": "products.myproducts",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "products": [
+            18
+        ]
+    }
+}
+]

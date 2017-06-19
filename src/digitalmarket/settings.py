@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'products',
+    'tags',
+    'analytics',
+    'sellers',
+    'billing'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +59,7 @@ ROOT_URLCONF = 'digitalmarket.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +84,18 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'digitalmarket',
+#         'USER': 'pyadmin',
+#         'PASSWORD': 'pyadmin123',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
 
 
 # Password validation
@@ -118,3 +135,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+#TEAM MANAGER
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+#TEAM DOESN'T
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "staticfiles") #'collect file here' #CDN /#AWS S3 Bucket
+
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media")
+
+PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "protected")

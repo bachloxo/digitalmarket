@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+
+<h1>Product List</h1>
+<p>
+  <form method="GET" action="">
+    <input type='text' name='q' placeholder="Search" value='{{ request.GET.q }}'>
+    <input type="submit" value="Submit">
+  </form>
+</p>
+<ul>
+{% include "products/product_list_spinnet.html" with products_list=object_list %}
+<!-- {% for instance in object_list %}
+    <li><a href="{{ instance.get_absolute_url }}">
+      {{ instance.title }}</a><br/>
+      {{ instance.description|urlize|truncatechars:100 }}<br/>
+      {{ instance.price }}</li>
+{% empty %}
+    <li>No product yet.</li>
+{% endfor %} -->
+</ul>
+
+
+{% endblock content %}

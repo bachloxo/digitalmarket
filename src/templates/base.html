@@ -6,12 +6,12 @@
   <link rel='stylesheet' href='{% static "css/base.css" %}' />
 <style>
 .main-content {
-  width: 800px;
+  width: 1028px;
   margin: 0 auto;
   clear: both;
 }
 .main-nav{
-  width: 800px;
+  width: 1028px;
   margin: 10px auto;
 }
 .main-nav li {
@@ -27,11 +27,11 @@
   float: left;
 }
 .col-primary{
-  width: 85%;
+  width: 75%;
 }
 .col-sidebar{
   padding-top: 20px;
-  width: 15%;
+  width: 25%;
 }
 .clearfix{
   clear:both;
@@ -61,7 +61,7 @@ button.buy-btn .ui-button-text {
     <ul class="pull-right">
       <li><a href='{% url "products:list" %}'>Products</a></li>
       <li><a href='{% url "tags:list" %}'>Tags</a></li>
-      <li><a href='#'>Library</a></li>
+      <li><a href='{% url "library" %}'>Library</a></li>
     </ul>
   </nav>
 <div class="main-content">

@@ -2,32 +2,78 @@
 from __future__ import unicode_literals
 
 import os
-
 from mimetypes import guess_type
 
 from django.conf import settings
 from wsgiref.util import FileWrapper
 from django.core.urlresolvers import reverse
-from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.db.models import Q, Avg, Count
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
+from django.views.generic import View
 
 from analytics.models import TagView
 from digitalmarket.mixins import (
         MultiSlugMixin,
         SubmitBtnMixin,
         LoginRequiredMixin,
-        StaffRequiredMixin
+        StaffRequiredMixin,
+        AjaxRequiredMixin
     )
+
+from sellers.models import SellerAccount
 from sellers.mixins import SellerAccountMixin
 from tags.models import Tag
 
 from .forms import ProductAddForm, ProductModelForm
 from .mixins import ProductManagerMixin
-from .models import Product
+from .models import Product, ProductRating, MyProducts
+
+class ProductRatingAjaxView(AjaxRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return JsonResponse({},status=401)
+        #credicard required
+        user = request.user
+        product_id = request.POST.get("product_id")
+        rating_value = request.POST.get("rating_value")
+        exists = Product.objects.filter(id=product_id).exists()
+        if not exists:
+            return JsonResponse({}, status=404)
+        try:
+            product_obj = Product.objects.get(id=product_id)
+        except:
+            product_obj = Product.objects.filter(id=product_id).first()
+
+        rating_obj, rating_obj_created = ProductRating.objects.get_or_create(
+            user=user,
+            product=product_obj
+            )
+
+        try:
+            rating_obj = ProductRating.objects.get(user=user, product=product_obj)
+        except ProductRating.MultipleObjectsReturned:
+            rating_obj = ProductRating.objects.filter(user=user, product=product_obj).first()
+        except:
+            # rating_obj = ProductRating.objects.create(user=user,product=product_obj)
+            rating_obj = ProductRating()
+            rating_obj.user = user
+            rating_obj.product = product_obj
+        rating_obj.rating = int(rating_value)
+        myproducts = user.myproducts.products.all()
+
+        if product_obj in myproducts:
+            rating_obj.verified = True
+        #verify ownership
+        rating_obj.save()
+
+        data = {
+            "success": True
+        }
+        return JsonResponse(data)
 
 class ProductCreateView(SellerAccountMixin, LoginRequiredMixin, SubmitBtnMixin, CreateView):
     model = Product
@@ -48,9 +94,6 @@ class ProductCreateView(SellerAccountMixin, LoginRequiredMixin, SubmitBtnMixin, 
                     new_tag = Tag.objects.get_or_create(title=str(tag).strip())[0]
                     new_tag.products.add(form.instance)
         return valid_data
-
-    # def get_success_url(self):
-    #     return reverse("products:list")
 
 class ProductUpdateView(SubmitBtnMixin, MultiSlugMixin, UpdateView):
     model = Product
@@ -91,9 +134,14 @@ class ProductDetailView(MultiSlugMixin, DetailView):
         context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
         obj = self.get_object()
         tags = obj.tag_set.all()
-        for tag in tags:
-            new_view = TagView.objects.add_count(self.request.user, tag)
-
+        rating_avg = obj.productrating_set.aggregate(Avg("rating"),Count("rating"))
+        context["rating_avg"] = rating_avg
+        if self.request.user.is_authenticated():
+            rating_obj = ProductRating.objects.filter(user=self.request.user, product=obj)
+            if rating_obj.exists():
+                context["my_rating"] = rating_obj.first().rating
+            for tag in tags:
+                new_view = TagView.objects.add_count(self.request.user, tag)
         return context
 
 class ProductDownloadView(MultiSlugMixin, DetailView):
@@ -118,13 +166,38 @@ class ProductDownloadView(MultiSlugMixin, DetailView):
         else:
             raise Http404
 
-class SellerProductListView(ListView):
+class SellerProductListView(SellerAccountMixin, ListView):
     model = Product
-    # template_name = "sellers/prouduct_list_view.html"
+    template_name = "sellers/product_list_view.html"
 
     def get_queryset(self, *args, **kwargs):
         qs = super(SellerProductListView, self).get_queryset(**kwargs)
         qs = qs.filter(seller=self.get_account())
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(
+                    Q(title__icontains=query)|
+                    Q(description__icontains=query)
+                ).order_by("title")
+        return qs
+
+class VendorListView(ListView):
+    model = Product
+    template_name = "product/product_list.html"
+
+    def get_object(self):
+        username = self.kwargs.get("vendor_name")
+        seller = get_object_or_404(SellerAccount, user__username=username)
+        return seller
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(VendorListView, self).get_context_data(*args, **kwargs)
+        context["vendor_name"] = str(self.get_object().user.username)
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        seller = self.get_object()
+        qs = super(VendorListView, self).get_queryset(**kwargs).filter(seller=seller)
         query = self.request.GET.get("q")
         if query:
             qs = qs.filter(
@@ -146,8 +219,24 @@ class ProductListView(ListView):
                 ).order_by("title")
         return qs
 
-def create(request):
-    form = ProductModelForm(request.POST or None)
+class UserLibraryListView(LoginRequiredMixin, ListView):
+    model = MyProducts
+    template_name = "products/library_list.html"
+
+    def get_queryset(self, *args, **kwargs):
+        obj = MyProducts.objects.get_or_create(user=self.request.user)[0]
+        qs = obj.products.all()
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(
+                    Q(title__icontains=query)|
+                    Q(description__icontains=query)
+                ).order_by("title")
+        return qs
+
+
+def create_view(request):
+    form = ProductModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.sale_price = instance.price

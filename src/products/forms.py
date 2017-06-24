@@ -58,6 +58,7 @@ class ProductModelForm(forms.ModelForm):
             "title",
             "description",
             "price",
+            "media"
         ]
         widgets = {
             "description" : forms.Textarea(

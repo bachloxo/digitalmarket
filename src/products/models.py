@@ -51,6 +51,20 @@ class Product(models.Model):
         if self.sale_price:
             return self.sale_price
         return self.price
+
+    def get_html_price(self):
+        price = self.get_price
+        if price == self.price:
+            return "<p>%s</p>" %(self.price)
+        elif price == self.sale_price:
+            return "<p><span>%s</span></p><span style='color:red; text-decoration:line-through;'>%s</span></p>" %(self.sale_price, self.price)
+        else:
+            return "<p>%s</p>" %(self.price)
+
+        if self.sale_price:
+            return self.sale_price
+        return self.price
+
     """
     get thumbnails, instance.thumbnail_set.all()
     """
@@ -155,7 +169,6 @@ def porduct_post_save_receiver(sender, instance, created, *args, **kwargs):
 
 post_save.connect(porduct_post_save_receiver, sender = Product)
 
-
 class MyProducts(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     products = models.ManyToManyField(Product, blank=True)
@@ -166,3 +179,22 @@ class MyProducts(models.Model):
     class Meta:
         verbose_name = "My Products"
         verbose_name_plural = "My products"
+
+
+class ProductRating(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    product = models.ForeignKey(Product)
+    rating = models.IntegerField(null=True, blank=True)
+    verified = models.BooleanField(default=False)
+
+    def  __unicode__(self):
+        return "%s" %(self.rating)
+
+class CuratedProducts(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    section_name = models.CharField(max_length=120)
+    products = models.ManyToManyField(Product, blank=True)
+    active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.section_name

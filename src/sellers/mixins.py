@@ -1,3 +1,6 @@
+import datetime
+from django.db.models import Count, Min, Sum, Max, Avg
+
 from billing.models import Transaction
 from digitalmarket.mixins import LoginRequiredMixin
 from products.models import Product
@@ -24,7 +27,23 @@ class SellerAccountMixin(LoginRequiredMixin, object):
         self.products = products
         return products
 
-    def get_transaction(self):
+    def get_transactions(self):
         products = self.get_products()
         transactions = Transaction.objects.filter(product__in=products)
         return transactions
+
+    def get_transactions_today(self):
+        today = datetime.date.today()
+        today_min = datetime.datetime.combine(today, datetime.time.min)
+        today_max = datetime.datetime.combine(today, datetime.time.max)
+        return self.get_transactions().filter(timestamp__range=(today_min, today_max))
+
+    def get_total_sales(self):
+        transactions = self.get_transactions().aggregate(Sum("price"), Avg("price"))
+        total_sales = transactions["price__sum"]
+        return total_sales
+
+    def get_today_sales(self):
+        transactions = self.get_transactions_today().aggregate(Sum("price"))
+        total_sales = transactions["price__sum"]
+        return total_sales

@@ -1,5 +1,5 @@
 {% load get_thumbnail %}
-  
+
 {% for instance in product_list %}
     <li>
       <a href="{{ instance.get_absolute_url }}">{{ instance.title }}</a><br/>
@@ -8,7 +8,7 @@
         <img src="{{ instance|get_thumbnail:"micro" }}" />
       </a><br/>
       {% endif %}
-      {{ instance.price }}
+      {{ instance.get_html_price|safe }}
     </li>
 {% empty %}
     <li>No product yet.</li>

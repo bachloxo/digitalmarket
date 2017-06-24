@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.db import models
+from django.core.urlresolvers import reverse
 
 class SellerAccount(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -12,3 +13,6 @@ class SellerAccount(models.Model):
 
     def __unicode__(self):
         return str(self.user.username)
+
+    def get_absolute_url(self):
+        return reverse("products:vendor_detail", kwargs={"vendor_name": self.user.username})

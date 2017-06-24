@@ -8,7 +8,8 @@ from products.views import (
 )
 from .views import (
     SellerDashboard,
-    SellerTransactionListView
+    SellerTransactionListView,
+    SellerProductRedirectView
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     url(r'^products/$', SellerProductListView.as_view(), name='product_list'), #sellers: product_list
     url(r'^products/add/$', ProductCreateView.as_view(), name='product_create'),
     url(r'^products/(?P<pk>\d+)/edit$', ProductUpdateView.as_view(), name='product_edit'),
+    url(r'^products/(?P<pk>\d+)/$', SellerProductRedirectView.as_view(), name='product_edit'),
 ]
